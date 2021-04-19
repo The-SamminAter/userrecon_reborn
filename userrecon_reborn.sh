@@ -137,6 +137,11 @@ else
 fi
 
 
+#Name changing (to uppercase and lowercase)
+nameLower=$(echo "${name}" | tr '[:upper:]' '[:lower:]')
+nameUpper=$(echo "${name}" | tr '[:lower:]' '[:upper:]')
+
+
 #File handling
 if [ "${fCreate}" ] #If fCreate exists, meaning it's already been set
 then
@@ -146,7 +151,8 @@ else
 	fCreateRaw=""
 	printf "${BLU}[?] Do you want to save the output to a file: "
 	read -p "" fCreateRaw
-	if [ "${fCreateRaw}" == "y" ] || [ "${fCreateRaw}" == "Y" ] || [ "${fCreateRaw}" == "Yes" ] || [ "${fCreateRaw}" == "yes" ] #I know, it's crude, but it works
+	fCreateRaw=$(echo "${fCreateRaw}" | tr '[:upper:]' '[:lower:]')
+	if [ "${fCreateRaw}" == "y" ] || [ "${fCreateRaw}" == "yes" ]
 	then
 		fCreate=true
 	fi
@@ -194,9 +200,8 @@ scan()
 	fi
 	if [[ $(echo "${resultRaw}" 2> /dev/null | head -c 5) == "curl:" ]] #The '2> /dev/null' eliminates the occasional echo broken pipe error
 	then
-		
 		#print "error" "${resultRaw}"
-		print "error" "$(printf "${resultRaw}" | head -n 1)" #Prints only the first line of the error message
+		print "error" "$(printf "${resultRaw}" | head -n 1)" "$1" #Prints only the first line of the error message
 	else
 		result=$(echo "${resultRaw}" | grep "$3")
 		if [ "$4" == "-i" ]
@@ -256,7 +261,7 @@ print()
 			printf "${BLU}[${RED}X${BLU}] ${RED}$2 not found\n"
 		elif [ "$1" == "error" ]
 		then
-			printf "${BLU}[${YLW}!${BLU}] ${YLW}Error: $2\n"
+			printf "${BLU}[${YLW}!${BLU}] ${YLW}$3 error: $2\n"
 		fi
 	fi
 	#Printing out the results (to fName) if the user wants a file created
@@ -270,7 +275,7 @@ print()
 			printf "[X] $2 not found\n" >> "${fName}"
 		elif [ "$1" == "error" ]
 		then
-			printf "[!] Error: $2\n" >> "${fName}"
+			printf "[!] $3 error: $2\n" >> "${fName}"
 		fi
 	fi
 }
@@ -279,8 +284,8 @@ print()
 #URL checking:
 #Arguments are explained in scan()
 
-#Bethesda - need to switch 'name' to lower-case
-scan "Bethesda" "https://bethesda.net/community/user/${name}" "${name}"
+#Bethesda
+scan "Bethesda" "https://bethesda.net/community/user/${nameLower}" "${name}"
 #GitHub
 scan "GitHub" "https://api.github.com/users/${name}" "${name}" "" "Accept: application/vnd.github.v3+json"
 #GOG - not using api (if there is one)
