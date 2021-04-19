@@ -98,16 +98,16 @@ else
 		printf "${GRN}  \___/|___/\___|_|  |_| \_\___|\___\___/|_| |_|${RED}  \        / 	\n"
 		printf "${BLU} Reborn ${RED}---------------------------------- ${BLU}${version}${RED}   \  __  /	\n"
 		printf "                                                    '.__.'	\n"
-	elif [ ${width} -ge 47 ] #If the width is less than 63, but greater than or equal to 47
+	elif [ ${width} -ge 48 ] #If the width is less than 63, but greater than or equal to 47
 	then
 		printf "${GRN}"
-		printf " _   _               ____\n"
-		printf "| | | |___  ___ _ __|  _ \ ___  ___ ___  _ __  \n"
-		printf "| | | / __|/ _ \ '__| |_) / _ \/ __/ _ \| '_ \ \n"
-		printf "| |_| \__ \  __/ |  |  _ <  __/ (_| (_) | | | |\n"
-		printf " \___/|___/\___|_|  |_| \_\___|\___\___/|_| |_|\n"
-		printf "${BLU}Reborn ${RED}---------------------------------- ${BLU}${version}${RED}\n"
-	elif [ ${width} -ge 14 ] #If the width is less than 47, but greater than or equal to 14
+		printf "  _   _               ____\n"
+		printf " | | | |___  ___ _ __|  _ \ ___  ___ ___  _ __  \n"
+		printf " | | | / __|/ _ \ '__| |_) / _ \/ __/ _ \| '_ \ \n"
+		printf " | |_| \__ \  __/ |  |  _ <  __/ (_| (_) | | | |\n"
+		printf "  \___/|___/\___|_|  |_| \_\___|\___\___/|_| |_|\n"
+		printf "${BLU} Reborn ${RED}---------------------------------- ${BLU}${version}${RED}\n"
+	elif [ ${width} -ge 14 ] #If the width is less than 48, but greater than or equal to 14
 	then
 		printf "${RED}"
 		printf "   .-\"\"\"\"-.   \n" #Trick to show four quotation marks
