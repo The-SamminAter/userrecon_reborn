@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #Version
-version="v0.10"
+version="v0.15"
 
 #Coloring:
 RST="\e[0;0m"
@@ -22,25 +22,10 @@ exitRST()
 trap "exitRST" EXIT 
 
 
-#This just checks if $1 is a known argument
-if [[ $(printf '%s' "$1" | cut -c1) == "-" ]]
-then
-	#There's got to be a simpler and better way to do this, but using [[ "$1" == @("-y"|"--yes") ]] requires bash 4.2 or higher
-	if [ "$1" == "-h" ] || [ "$1" == "--help" ] || [ "$1" == "-s" ] || [ "$1" == "--silent" ] || [ "$1" == "-y" ] || [ "$1" == "--yes" ] || [ "$1" == "-n" ] || [ "$1" == "--no" ]
-	then
-		isArg=true
-	else
-		isArg=false
-	fi
-else
-	isArg=false
-fi
-
-
 #Name and argument handling
 name=""
 silent=false
-if [[ "${isArg}" == true && "$1" == "-h" ]] || [[ "${isArg}" == true && "$1" == "--help" ]] #Help dialogue
+if [ "$1" == "-h" ] || [ "$1" == "--help" ] #Help dialogue
 then
 	echo "UserRecon Reborn ${version} - help dialogue:"
 	echo "Usage: ./userrecon_reborn.sh [argument] <name>"
@@ -52,14 +37,14 @@ then
 	echo " -n, --no      Disables writing the output to a local file"
 	echo ""
 	echo "Local file naming:"
-	echo " If enabled, a file named name-x.txt in the current directory will be created and written to, where 'name' is the name scanned for, and 'x' is a number, 1 or higher, to prevent overwriting of previous scans"
+	echo " If enabled, a file named name-x.txt in the current directory will be created and written to, where 'name' is the name scanned for, and 'x' is an increasing int, to prevent overwriting of previous scans"
 	echo ""
 	echo "Homepage: <https://github.com/the-samminater/userrecon_reborn>"
 	exit
-elif [[ "${isArg}" == true && "$1" == "-s" ]] || [[ "${isArg}" == true && "$1" == "--silent" ]] #Silent mode
+elif [ "$1" == "-s" ] || [ "$1" == "--silent" ] #Silent mode
 then
 	silent=true
-	if [ $2 ]
+	if [ "$2" ]
 	then
 		name="$2"
 		fCreate=true
@@ -71,16 +56,16 @@ then
 else
 	if [ "$1" ] #If the script is ran with at least one argument
 	then
-		if [ "${isArg}" == true ] #And if the first argument is a recognized argument
+		if [ "$1" == "-y" ] || [ "$1" == "--yes" ]
 		then
-			if [ "$1" == "-y" ] || [ "$1" == "--yes" ]
-			then
-				fCreate=true
-			elif [ "$1" == "-n" ] || [ "$1" == "--no" ]
-			then
-				fCreate=false
-			fi
-			if [ $2 ] #If there's a second argument, presume it's a name
+			fCreate=true
+		elif [ "$1" == "-n" ] || [ "$1" == "--no" ]
+		then
+			fCreate=false
+		fi
+		if [ "${fCreate}" ] #If fCreate exists, check for $2, and if that exists too, presume it ($2) is a name
+		then
+			if [ "$2" ]
 			then
 				name="$2"
 			fi
@@ -99,17 +84,46 @@ else
 			fi
 		fi
 	fi
-	#Title; sorry about the general messiness, I've tried to keep it relatively clean
-	#printf "${RED}\n"
-	printf "${RED}                                                   .-\"\"\"\"-.	\n"; #trick to show four quotation marks
-	printf "                                                  /        \	\n"
-	printf "${GRN}  _   _               ____                      ${RED} /_        _\	\n"
-	printf "${GRN} | | | |___  ___ _ __|  _ \ ___  ___ ___  _ __  ${RED}// \      / \\"; echo "\\	" #cheap trick to show two back-slashes
-	printf "${GRN} | | | / __|/ _ \ '__| |_) / _ \/ __/ _ \| '_ \ ${RED}|\__\    /__/|	\n"
-	printf "${GRN} | |_| \__ \  __/ |  |  _ <  __/ (_| (_) | | | |${RED} \    ||    /	\n"
-	printf "${GRN}  \___/|___/\___|_|  |_| \_\___|\___\___/|_| |_|${RED}  \        / 	\n"
-	printf "${BLU} Reborn ${RED}---------------------------------- ${BLU}${version}${RED}   \  __  /	\n"
-	printf "                                                    '.__.'	\n"
+	width=$(tput cols)
+	if [ ${width} -ge 63 ]
+	then
+		#Title; sorry about the general messiness, I've tried to keep it relatively clean
+		#printf "${RED}\n"
+		printf "${RED}                                                   .-\"\"\"\"-.	\n"; #Trick to show four quotation marks
+		printf "                                                  /        \	\n"
+		printf "${GRN}  _   _               ____                      ${RED} /_        _\	\n"
+		printf "${GRN} | | | |___  ___ _ __|  _ \ ___  ___ ___  _ __  ${RED}// \      / \\"; echo "\\	" #Cheap trick to show two back-slashes
+		printf "${GRN} | | | / __|/ _ \ '__| |_) / _ \/ __/ _ \| '_ \ ${RED}|\__\    /__/|	\n"
+		printf "${GRN} | |_| \__ \  __/ |  |  _ <  __/ (_| (_) | | | |${RED} \    ||    /	\n"
+		printf "${GRN}  \___/|___/\___|_|  |_| \_\___|\___\___/|_| |_|${RED}  \        / 	\n"
+		printf "${BLU} Reborn ${RED}---------------------------------- ${BLU}${version}${RED}   \  __  /	\n"
+		printf "                                                    '.__.'	\n"
+	elif [ ${width} -ge 47 ]
+	then
+		echo "width is greater than 46 and less than 63"
+		printf "${GRN}"
+		printf " _   _               ____\n"
+		printf "| | | |___  ___ _ __|  _ \ ___  ___ ___  _ __  \n"
+		printf "| | | / __|/ _ \ '__| |_) / _ \/ __/ _ \| '_ \ \n"
+		printf "| |_| \__ \  __/ |  |  _ <  __/ (_| (_) | | | |\n"
+		printf " \___/|___/\___|_|  |_| \_\___|\___\___/|_| |_|\n"
+		printf "${BLU}Reborn ${RED}---------------------------------- ${BLU}${version}${RED}\n"
+	elif [ ${width} -ge 14 ]
+	then
+		printf "${RED}"
+		printf "   .-\"\"\"\"-.   \n" #Trick to show four quotation marks
+		printf "  /        \  \n"
+		printf " /_        _\ \n"
+		printf "// \      / \\"; echo "\\" #Cheap trick to show two back-slashes
+		printf "|\__\    /__/|\n"
+		printf " \    ||    / \n"
+		printf "  \        /  \n"
+		printf "   \  __  /   \n"
+		printf "    '.__.'    \n"
+		printf "${GRN}U.R.R __ ${version}\n"
+	else
+		printf "${RED}UserRecon Reborn - ${version}"
+	fi
 	if [ "${name}" == "" ]
 	then
 		while [ "${name}" == "" ]
@@ -125,7 +139,7 @@ fi
 
 
 #File handling
-if [ ${fCreate} ] #If fCreate exists, meaning it's already been set
+if [ "${fCreate}" ] #If fCreate exists, meaning it's already been set
 then
 	: #This just does nothing
 else
@@ -149,6 +163,10 @@ then
 		fName="${name}-${fCount}.txt"
 	done
 	touch "${fName}"
+	if [ ${silent} == false ]
+	then
+		printf "${BLU}[?] Saving output to ${fName}\n"
+	fi
 fi
 
 
@@ -159,19 +177,27 @@ scan()
 	#$2: URL
 	#$3: string to grep for (as an indication of success)
 	#$4: if set to -i (as in inverse), turns $3 into an indication of failure - only use if necessary
-	#$5: Headers (if necessary)
+	#$5: Header (if necessary) - if curl has an issue with a header (if it has a colon), then put it here
+	#$6: Other headers (if necessary) - the -H and " need to be included for each
 	#
 	#Credit to https://stackoverflow.com/a/57120937 for 2>&1 for capturing curl's error
 	#Also in use is a custom user agent, as curl/* doesn't work for some sites
-	if [ "$5" ] #In the case that a header is necessary
+	if [ "$5" ] #In the case that a header is necessary - should modify to accept as many headers as is needed
 	then
-		resultRaw=$(curl -s -S --show-error -A "UserRecon Reborn/${version}" "$2" -H "$5" 2>&1)
+		if [ "$6" ] #In the case that more headers are necessary
+		then
+			resultRaw=$(curl -s -S --show-error -A "UserRecon Reborn/${version}" "$2" -H "$5" $6 2>&1) #Only had limited testing, should work though
+		else
+			resultRaw=$(curl -s -S --show-error -A "UserRecon Reborn/${version}" "$2" -H "$5" 2>&1)
+		fi
 	else
 		resultRaw=$(curl -s -S --show-error -A "UserRecon Reborn/${version}" "$2" 2>&1)
 	fi
-	if [[ $(echo "${resultRaw}" | head -c 5) == "curl:" ]] #Need to change to deal with errors w/ more than one line
+	if [[ $(echo "${resultRaw}" 2> /dev/null | head -c 5) == "curl:" ]] #The '2> /dev/null' eliminates the occasional echo broken pipe error
 	then
-		print "error" "${resultRaw}"
+		
+		#print "error" "${resultRaw}"
+		print "error" "$(printf "${resultRaw}" | head -n 1)" #Prints only the first line of the error message
 	else
 		result=$(echo "${resultRaw}" | grep "$3")
 		if [ "$4" == "-i" ]
@@ -190,7 +216,24 @@ scan()
 				status="failure"
 			fi
 		fi
-		print "${status}" "$1"
+		if [ "${fCreate}" == true ] && [ "${status}" == "success" ]
+		then
+			#Custom manual link-passing for certain sites; not necessary, but nice
+			if [ "$1" == "GitHub" ]
+			then
+				print "${status}" "$1" "https://github.com/${name}"
+			elif [ "$1" == "Imgur" ]
+			then
+				print "${status}" "$1" "https://imgur.com/user/${name}"
+			elif [ "$1" == "Reddit" ]
+			then
+				print "${status}" "$1" "https://reddit.com/u/${name}"
+			else
+				print "${status}" "$1" "$2"
+			fi
+		else
+			print "${status}" "$1"
+		fi
 		unset status
 	fi
 }
@@ -200,7 +243,8 @@ scan()
 print()
 {
 	#$1: status message
-	#$2: site name/error message (if $1 is "error")
+	#$2: site name/error message
+	#$3: URL (for printing to file)
 	#
 	#Printing out the results (to the console) if the script isn't being ran in silent mode
 	if [ "${silent}" == false ]
@@ -221,7 +265,7 @@ print()
 	then
 		if [ "$1" == "success" ]
 		then
-			printf "[\xE2\x9C\x94] $2 found\n" >> "${fName}"
+			printf "[\xE2\x9C\x94] $2 found: $3\n" >> "${fName}"
 		elif [ "$1" == "failure" ]
 		then
 			printf "[X] $2 not found\n" >> "${fName}"
@@ -236,8 +280,12 @@ print()
 #URL checking:
 #Arguments are explained in scan()
 
+#Bethesda - need to switch 'name' to lower-case
+scan "Bethesda" "https://bethesda.net/community/user/${name}" "${name}"
 #GitHub
 scan "GitHub" "https://api.github.com/users/${name}" "${name}" "" "Accept: application/vnd.github.v3+json"
+#GOG - not using api (if there is one)
+scan "GOG" "https://www.gog.com/u/${name}" "${name}"
 #iFunny
 scan "iFunny" "https://ifunny.co/user/${name}" "${name}"
 #Imgur
@@ -251,11 +299,12 @@ scan "Roblox" "https://www.roblox.com/users/profile?username=${name}" "code=404"
 #Tumblr - not using api
 scan "Tumblr" "https://${name}.tumblr.com/" "${name}"
 #YouTube - not using api
-scan "YouTube" "https://www.youtube.com/user/${name}" "${name}"
+#scan "YouTube" "https://www.youtube.com/user/${name}" "${name}" - sometimes returns false-negatives
+scan "YouTube" "https://www.youtube.com/c/${name}" "${name}"
 
 
 #Planned sites/site ideas:
-#(Impossible ones will be removed)
+#Impossible ones will be removed, and remaining ones will be looked into further
 #
 #Instagram - requires api access or headless browser
 #Twitter - requires api access or headless browser
@@ -275,11 +324,9 @@ scan "YouTube" "https://www.youtube.com/user/${name}" "${name}"
 #VK - either requires api access, a headless browser, or converting a user's name to their id
 #Torn - likely not possible (unless the user supplies their personal api key)
 #Steam - need to look into, get api access, or a headless browser
-#Rockstar Games
-#Twitch
-#Vimeo
-#GOG
-#Bethesda
+#Rockstar Games - was unable to look into because of too many arkose labs captchas
+#Twitch - requires api access or headless browser
+#Vimeo - requires api access or name to id conversion (possibly using the search page?)
 #Origin
 #PSN
 #PS+ (apparently different than PSN?)

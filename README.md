@@ -1,8 +1,8 @@
 # UserRecon Reborn
 
-### Status: fully functional, 8 checks implemented, many more planned
+### Status: fully functional, 10 checks implemented, many more planned
 
-This is a re-write of TheLinuxChoice's UserRecon, which is (mostly) broken. This re-write has some extra features, and will (hopefully) be more easy to maintain and add onto.
+This is a re-write of TheLinuxChoice's UserRecon, which is (mostly) broken. This re-write has some extra features, and is easier to maintain and add onto.
 
 I suggest using this on on a shell with a black background (for visibility)
 
@@ -21,7 +21,8 @@ I suggest using this on on a shell with a black background (for visibility)
 - [x] Print function
 - [ ] Addition/migration of all (original) site/username checks
 - [ ] Add name variation option/checking
-- [ ] Add terminal size checking (`tput cols`)
+- [x] Add terminal size checking (`tput cols`)
+- [ ] Add switching to lower-case (or uppercase) for sites that only use one (or the other)
 
 
 ----------------
