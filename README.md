@@ -8,21 +8,8 @@ I suggest using this on on a shell with a black background (for visibility)
 
 ### To-do:
 
-- [x] Colors/coloring
-- [x] Launch arguments
-   - [x] Silent mode
-   - [x] Username as a launch argument
-      - [x] Set output file creation
-      - [x] Accept file creation argument first
-   - [x] Set output file creation (on no username entered)
-   - [x] Help argument
-- [x] Scan function
-   - [x] Creation and documentation of the arguments
-- [x] Print function
-- [ ] Addition/migration of all (original) site/username checks
-- [ ] Add name variation option/checking
-- [x] Add terminal size checking (`tput cols`)
-- [ ] Add switching to lower-case (or uppercase) for sites that only use one (or the other)
+- Addition/migration of all (original) site/username checks
+- Add name variation option/checking
 
 
 ----------------
