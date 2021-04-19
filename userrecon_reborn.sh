@@ -85,7 +85,7 @@ else
 		fi
 	fi
 	width=$(tput cols)
-	if [ ${width} -ge 63 ]
+	if [ ${width} -ge 63 ] #If the width is greater than or equal to 63
 	then
 		#Title; sorry about the general messiness, I've tried to keep it relatively clean
 		#printf "${RED}\n"
@@ -98,9 +98,8 @@ else
 		printf "${GRN}  \___/|___/\___|_|  |_| \_\___|\___\___/|_| |_|${RED}  \        / 	\n"
 		printf "${BLU} Reborn ${RED}---------------------------------- ${BLU}${version}${RED}   \  __  /	\n"
 		printf "                                                    '.__.'	\n"
-	elif [ ${width} -ge 47 ]
+	elif [ ${width} -ge 47 ] #If the width is less than 63, but greater than or equal to 47
 	then
-		echo "width is greater than 46 and less than 63"
 		printf "${GRN}"
 		printf " _   _               ____\n"
 		printf "| | | |___  ___ _ __|  _ \ ___  ___ ___  _ __  \n"
@@ -108,7 +107,7 @@ else
 		printf "| |_| \__ \  __/ |  |  _ <  __/ (_| (_) | | | |\n"
 		printf " \___/|___/\___|_|  |_| \_\___|\___\___/|_| |_|\n"
 		printf "${BLU}Reborn ${RED}---------------------------------- ${BLU}${version}${RED}\n"
-	elif [ ${width} -ge 14 ]
+	elif [ ${width} -ge 14 ] #If the width is less than 47, but greater than or equal to 14
 	then
 		printf "${RED}"
 		printf "   .-\"\"\"\"-.   \n" #Trick to show four quotation marks
@@ -121,7 +120,7 @@ else
 		printf "   \  __  /   \n"
 		printf "    '.__.'    \n"
 		printf "${GRN}U.R.R __ ${version}\n"
-	else
+	else #If the width is less than 14
 		printf "${RED}UserRecon Reborn - ${version}"
 	fi
 	if [ "${name}" == "" ]
