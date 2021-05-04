@@ -71,7 +71,7 @@ else
 			fi
 		else #Presume that the first argument is a name
 			name="$1"
-			if [ $2 ]
+			if [ "$2" ]
 			then
 				#if [[ "$2" == @("-y"|"--yes") ]] #Requires bash v4.2 or later
 				if [ "$2" == "-y" ] || [ "$2" == "--yes" ]
@@ -85,7 +85,7 @@ else
 		fi
 	fi
 	width=$(tput cols)
-	if [ ${width} -ge 63 ] #If the width is greater than or equal to 63
+	if [ "${width}" -ge 63 ] #If the width is greater than or equal to 63
 	then
 		#Title; sorry about the general messiness, I've tried to keep it relatively clean
 		#printf "${RED}\n"
@@ -98,7 +98,7 @@ else
 		printf "${GRN}  \___/|___/\___|_|  |_| \_\___|\___\___/|_| |_|${RED}  \        / 	\n"
 		printf "${BLU} Reborn ${RED}---------------------------------- ${BLU}${version}${RED}   \  __  /	\n"
 		printf "                                                    '.__.'	\n"
-	elif [ ${width} -ge 48 ] #If the width is less than 63, but greater than or equal to 47
+	elif [ "${width}" -ge 48 ] #If the width is less than 63, but greater than or equal to 47
 	then
 		printf "${GRN}"
 		printf "  _   _               ____\n"
@@ -107,7 +107,7 @@ else
 		printf " | |_| \__ \  __/ |  |  _ <  __/ (_| (_) | | | |\n"
 		printf "  \___/|___/\___|_|  |_| \_\___|\___\___/|_| |_|\n"
 		printf "${BLU} Reborn ${RED}---------------------------------- ${BLU}${version}${RED}\n"
-	elif [ ${width} -ge 14 ] #If the width is less than 48, but greater than or equal to 14
+	elif [ "${width}" -ge 14 ] #If the width is less than 48, but greater than or equal to 14
 	then
 		printf "${RED}"
 		printf "   .-\"\"\"\"-.   \n" #Trick to show four quotation marks
@@ -128,7 +128,9 @@ else
 		while [ "${name}" == "" ]
 		do
 			printf "${BLU}[?] Name: "
-			read -p "" name
+			#read -p "" name
+			IFS="" read -rp "" name
+			#Change suggested by ShellCheck - SC2162
 			#To-do: add similar name(s) option
 		done
 	else
@@ -150,7 +152,8 @@ else
 	fCreate=false
 	fCreateRaw=""
 	printf "${BLU}[?] Do you want to save the output to a file: "
-	read -p "" fCreateRaw
+	read -rp "" fCreateRaw
+	#-r suggested by ShellCheck - SC2162
 	fCreateRaw=$(echo "${fCreateRaw}" | tr '[:upper:]' '[:lower:]')
 	if [ "${fCreateRaw}" == "y" ] || [ "${fCreateRaw}" == "yes" ]
 	then
@@ -161,7 +164,7 @@ if [ "${fCreate}" == true ]
 then
 	#fCount (and fName) are in place to prevent overwriting or adding on to a pre-existing file
 	fCount=1
-	fName="${name}-${fCount}.txt"
+	fName="${name}-${fCount}.txt" #Need to add replacement for / in 'name' with _ or some other character
 	while [ -f "./${fName}" ]
 	do
 		let "fCount++"
@@ -201,7 +204,11 @@ scan()
 	if [[ $(echo "${resultRaw}" 2> /dev/null | head -c 5) == "curl:" ]] #The '2> /dev/null' eliminates the occasional echo broken pipe error
 	then
 		#print "error" "${resultRaw}"
-		print "error" "$(printf "${resultRaw}" | head -n 1)" "$1" #Prints only the first line of the error message
+		#Prints only the first line of the error message:
+		#print "error" "$(printf "${resultRaw}" | head -n 1)" "$1" 
+		print "error" "$(printf "%s" "${resultRaw}" | head -n 1)" "$1" 
+		#Change suggested by ShellCheck - SC2059
+		#Although it's unlikely to cause a problem, I might as well use their suggestion
 	else
 		result=$(echo "${resultRaw}" | grep "$3")
 		if [ "$4" == "-i" ]
@@ -269,7 +276,9 @@ print()
 	then
 		if [ "$1" == "success" ]
 		then
-			printf "[\xE2\x9C\x94] $2 found: $3\n" >> "${fName}"
+			#printf "[\xE2\x9C\x94] $2 found: $3\n" >> "${fName}"
+			printf "[\xE2\x9C\x94] $2 found: %s\n" "$3" >> "${fName}"
+			#Change suggested by ShellCheck - SC2059
 		elif [ "$1" == "failure" ]
 		then
 			printf "[X] $2 not found\n" >> "${fName}"
@@ -310,7 +319,7 @@ scan "YouTube" "https://www.youtube.com/c/${name}" "${name}"
 #Planned sites/site ideas:
 #Impossible ones will be removed, and remaining ones will be looked into further
 #
-#Instagram - requires api access or headless browser
+#Instagram - requires api access or headless browser - look into using sites like searchusers.com (real? fake?)
 #Twitter - requires api access or headless browser
 #	Useful strings are in https://abs.twimg.com/responsive-web/client-web/i18n/en.324d25d5.js
 #	Maybe refer headers are neccesary?
