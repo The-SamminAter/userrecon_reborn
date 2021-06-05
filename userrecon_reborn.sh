@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 #Version
 version="v0.15"
@@ -295,6 +295,8 @@ print()
 
 #Bethesda
 scan "Bethesda" "https://bethesda.net/community/user/${nameLower}" "${name}"
+#Chess.com - not using api (if there is one)
+scan "Chess.com" "https://www.chess.com/member/${nameLower}" "${name}"
 #GitHub
 scan "GitHub" "https://api.github.com/users/${name}" "${name}" "" "Accept: application/vnd.github.v3+json"
 #GOG - not using api (if there is one)
