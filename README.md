@@ -1,6 +1,6 @@
 # UserRecon Reborn
 
-### Status: fully functional, 12 checks implemented, many more planned
+### Status: fully functional, 13 checks implemented, many more planned
 
 This is a re-write of TheLinuxChoice's UserRecon, which is (mostly) broken. This re-write has some extra features, and is easier to maintain and add onto.
 
