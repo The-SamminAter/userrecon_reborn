@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 #Version
-version="v0.16"
+version="v0.17"
 
 #Coloring:
 RST="\e[0;0m"
@@ -236,6 +236,9 @@ scan()
 			elif [ "$1" == "Imgur" ]
 			then
 				print "${status}" "$1" "https://imgur.com/user/${name}"
+			elif [ "$1" == "Instagram" ]
+			then
+				print "${status}" "$1" "https://instagram.com/${name}"
 			elif [ "$1" == "Reddit" ]
 			then
 				print "${status}" "$1" "https://reddit.com/u/${name}"
@@ -299,7 +302,7 @@ print()
 #Bethesda
 scan "Bethesda" "https://bethesda.net/community/user/${nameLower}" "${name}"
 #Chess.com - not using api (if there is one)
-scan "Chess.com" "https://www.chess.com/member/${nameLower}" "${name}"
+scan "Chess.com" "https://www.chess.com/member/${name}" "(${name}) - Chess Profile - Chess.com"
 #GitHub
 scan "GitHub" "https://api.github.com/users/${name}" "${name}" "" "Accept: application/vnd.github.v3+json"
 #GOG - not using api (if there is one)
@@ -308,6 +311,8 @@ scan "GOG" "https://www.gog.com/u/${name}" "${name}"
 scan "iFunny" "https://ifunny.co/user/${name}" "404 - page not found -" "-i"
 #Imgur
 scan "Imgur" "https://api.imgur.com/3/account/${name}" "${name}" "" "Authorization: Client-ID f7b3d452da6f049" #Imgur Client-ID for UserRecon Reborn
+#Instagram - via bibliogram.art, not using api
+scan "Instagram" "https://bibliogram.art/u/${name}" "${name}"
 #PicsArt - not using api - couldn't find endpoints (api.picsart.com)
 scan "PicsArt" "https://picsart.com/u/${name}" "${name}"
 #Reddit                                                                                   
@@ -326,7 +331,6 @@ scan "YouTube" "https://www.youtube.com/c/${name}" "${name}"
 #Planned sites/site ideas:
 #Impossible ones will be removed, and remaining ones will be looked into further
 #
-#Instagram - requires api access or headless browser - look into using sites like searchusers.com (real? fake?)
 #Facebook - curl refuses to connect?
 #TikTok - need to look into
 #Pintrest - requires api access or headless browser
