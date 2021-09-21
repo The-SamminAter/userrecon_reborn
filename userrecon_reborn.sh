@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 #Version
-version="v0.15"
+version="v0.16"
 
 #Coloring:
 RST="\e[0;0m"
@@ -239,6 +239,9 @@ scan()
 			elif [ "$1" == "Reddit" ]
 			then
 				print "${status}" "$1" "https://reddit.com/u/${name}"
+			elif [ "$1" == "Twitter" ]
+			then
+				print "${status}" "$1" "https://twitter.com/${name}"
 			else
 				print "${status}" "$1" "$2"
 			fi
@@ -302,7 +305,7 @@ scan "GitHub" "https://api.github.com/users/${name}" "${name}" "" "Accept: appli
 #GOG - not using api (if there is one)
 scan "GOG" "https://www.gog.com/u/${name}" "${name}"
 #iFunny
-scan "iFunny" "https://ifunny.co/user/${name}" "${name}"
+scan "iFunny" "https://ifunny.co/user/${name}" "404 - page not found -" "-i"
 #Imgur
 scan "Imgur" "https://api.imgur.com/3/account/${name}" "${name}" "" "Authorization: Client-ID f7b3d452da6f049" #Imgur Client-ID for UserRecon Reborn
 #PicsArt - not using api - couldn't find endpoints (api.picsart.com)
@@ -313,6 +316,8 @@ scan "Reddit" "https://api.reddit.com/user/${name}" "${name}"
 scan "Roblox" "https://www.roblox.com/users/profile?username=${name}" "code=404" "-i"
 #Tumblr - not using api
 scan "Tumblr" "https://${name}.tumblr.com/" "${name}"
+#Twitter - via nitter.net, not using api
+scan "Twitter" "https://nitter.net/${name}" "(@${name})"
 #YouTube - not using api
 #scan "YouTube" "https://www.youtube.com/user/${name}" "${name}" - sometimes returns false-negatives
 scan "YouTube" "https://www.youtube.com/c/${name}" "${name}"
@@ -322,14 +327,6 @@ scan "YouTube" "https://www.youtube.com/c/${name}" "${name}"
 #Impossible ones will be removed, and remaining ones will be looked into further
 #
 #Instagram - requires api access or headless browser - look into using sites like searchusers.com (real? fake?)
-#Twitter - requires api access or headless browser
-#	Useful strings are in https://abs.twimg.com/responsive-web/client-web/i18n/en.324d25d5.js
-#	Maybe refer headers are neccesary?
-#	An example: curl 'https://abs.twimg.com/responsive-web/client-web/i18n/en.324d25d5.js' -H 'User-Agent: UserRecon Reborn/${version}' -H 'Accept: */*' -H 'Accept-Language: en-US,en;q=0.5' --compressed -H 'Referer: https://mobile.twitter.com/${name}' -H 'Origin: https://mobile.twitter.com' -H 'DNT: 1' -H 'Sec-GPC: 1' -H 'Connection: keep-alive' 
-#	Maybe try finding '<span class="css-901oao css-16my406 r-poiln3 r-bcqeeo r-qvutc0">*</span>' and where/when that's loaded in
-#	^^That contains both 'This account doesn’t exist', and 'Try searching for another.'
-#	Would be a pain, as that file contains all of the strings; maybe try to curl a profile image url instead, or perhaps search for the 'Joined: ' string
-#	Maybe try using a username to id converter? If it's reliable, then I can use that to check for existence
 #Facebook - curl refuses to connect?
 #TikTok - need to look into
 #Pintrest - requires api access or headless browser
