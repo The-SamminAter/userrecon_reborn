@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 #Version
-version="v0.17"
+version="v0.18"
 
 #Coloring:
 RST="\e[0;0m"
@@ -251,6 +251,8 @@ scan()
 		else
 			print "${status}" "$1"
 		fi
+		unset resultRaw
+		unset result
 		unset status
 	fi
 }
@@ -303,6 +305,8 @@ print()
 scan "Bethesda" "https://bethesda.net/community/user/${nameLower}" "${name}"
 #Chess.com - not using api (if there is one)
 scan "Chess.com" "https://www.chess.com/member/${name}" "(${name}) - Chess Profile - Chess.com"
+#Facebook - not using api
+scan "Facebook" "https://www.facebook.com/${name}" '"error":0,' "-i"
 #GitHub
 scan "GitHub" "https://api.github.com/users/${name}" "${name}" "" "Accept: application/vnd.github.v3+json"
 #GOG - not using api (if there is one)
@@ -315,10 +319,15 @@ scan "Imgur" "https://api.imgur.com/3/account/${name}" "${name}" "" "Authorizati
 scan "Instagram" "https://bibliogram.art/u/${name}" "${name}"
 #PicsArt - not using api - couldn't find endpoints (api.picsart.com)
 scan "PicsArt" "https://picsart.com/u/${name}" "${name}"
+#Pintrest - not using api - also, $6 is being abused to add the argument -sSL (possibly to be built into the scan() curls)
+#scan "Pintrest" "https://www.pintrest.ca/${name}" "(${name}) - Profile | Pinterest" "" "" "-sSL"
+#The Pintrest scan is commented out because it doesn't seem to work for some reason
 #Reddit                                                                                   
 scan "Reddit" "https://api.reddit.com/user/${name}" "${name}"
 #Roblox - not using api
 scan "Roblox" "https://www.roblox.com/users/profile?username=${name}" "code=404" "-i"
+#TikTok
+scan "TikTok" "https://www.tiktok.com/@${name}" 'serverCode":404,' "-i"
 #Tumblr - not using api
 scan "Tumblr" "https://${name}.tumblr.com/" "${name}"
 #Twitter - via nitter.net, not using api
@@ -331,10 +340,8 @@ scan "YouTube" "https://www.youtube.com/c/${name}" "${name}"
 #Planned sites/site ideas:
 #Impossible ones will be removed, and remaining ones will be looked into further
 #
-#Facebook - curl refuses to connect?
-#TikTok - need to look into
-#Pintrest - requires api access or headless browser
-#Snapchat
+#Pintrest - fix scan/figure out why it doesn't work
+#Snapchat - must look into further
 #Tinder
 #Tinder alternatives
 #VK - either requires api access, a headless browser, or converting a user's name to their id
