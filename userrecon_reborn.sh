@@ -332,9 +332,9 @@ scan "TikTok" "https://www.tiktok.com/@${name}" 'serverCode":404,' "-i"
 scan "Tumblr" "https://${name}.tumblr.com/" "${name}"
 #Twitter - via nitter.net, not using api
 scan "Twitter" "https://nitter.net/${name}" "(@${name})"
-#YouTube - not using api
-#scan "YouTube" "https://www.youtube.com/user/${name}" "${name}" - sometimes returns false-negatives
-scan "YouTube" "https://www.youtube.com/c/${name}" "${name}"
+#YouTube - not using api - sometimes returns false-negatives
+scan "YouTube check one" "https://www.youtube.com/user/${nameLower}" "${name}"
+scan "YouTube check two" "https://www.youtube.com/c/${name}" "${name}"
 
 
 #Planned sites/site ideas:
